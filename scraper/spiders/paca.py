@@ -152,6 +152,7 @@ class PACASpider(scrapy.Spider):
                         full_info=info,
                         department=dept.split(" - ")[0],
                         source="www.paca.developpement-durable.gouv.fr",
+                        access=self.access_level,
                     )
 
                     yield response.follow(
