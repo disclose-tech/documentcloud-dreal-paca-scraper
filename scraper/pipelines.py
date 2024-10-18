@@ -235,10 +235,11 @@ class UploadPipeline:
                         "source_scraper": item["source_scraper"],
                         "source_file_url": item["source_file_url"],
                         "source_page_url": item["source_page_url"],
+                        "source_filename": item["source_filename"],
                         "publication_date": item["publication_date"],
                         "publication_time": item["publication_time"],
                         "publication_datetime": item["publication_datetime"],
-                        "year": item["year"],
+                        "year": str(item["year"]),
                     },
                 )
                 spider.logger.info(
