@@ -151,6 +151,7 @@ class PACASpider(scrapy.Spider):
                         source_scraper="DREAL PACA Scraper",
                         full_info=info,
                         department=dept.split(" - ")[0],
+                        source="www.paca.developpement-durable.gouv.fr",
                     )
 
                     yield response.follow(
