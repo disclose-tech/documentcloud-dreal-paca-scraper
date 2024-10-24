@@ -20,7 +20,7 @@ from scraper.spiders.paca import PACASpider
 
 
 class DiscloseDREALPACAScraper(AddOn):
-    """Scraper for MRAe documents (https://www.mrae.developpement-durable.gouv.fr)."""
+    """Scraper for DREAL PACA documents (https://www.paca.developpement-durable.gouv.fr)."""
 
     def check_permissions(self):
         """Check if the user is a verified journalist & can upload a document."""
