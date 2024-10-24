@@ -125,11 +125,13 @@ class BeautifyPipeline:
 
         item["title"] = item["title"].replace("  ", " ")
 
+        # Format title
+        # F093XXXXX Doc name
         split_title = item["title"].split(" ")
 
         if len(split_title) > 1:
 
-            if split_title[0].lower().startswith("f093"):
+            if split_title[0].lower().startswith("f09"):
 
                 # Project id in uppercase
                 split_title[0] = split_title[0].upper()
@@ -143,10 +145,17 @@ class BeautifyPipeline:
             item["title"] = " ".join(split_title)
 
         else:
-            if item["title"].strip().lower().startswith("f093"):
+            if item["title"].strip().lower().startswith("f09"):
                 item["title"] = item["title"].upper().strip()
             else:
                 item["title"] = item["title"][0].upper() + item["title"][1:]
+
+        # Replace "Ap" by "Arrêté préfectoral"
+        item["title"] = re.sub(
+            r"(F0\w{8,10}(?:(?:-\d| \d))?) Ap\b",
+            r"\1 Arrêté préfectoral",
+            item["title"],
+        )
 
         return item
 
@@ -234,6 +243,7 @@ class UploadPipeline:
                         "category_local": item["category_local"],
                         "source_scraper": item["source_scraper"],
                         "source_file_url": item["source_file_url"],
+                        "event_data_key": item["source_file_url"],
                         "source_page_url": item["source_page_url"],
                         "source_filename": item["source_filename"],
                         "publication_date": item["publication_date"],
