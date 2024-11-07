@@ -282,6 +282,14 @@ class UploadPipeline:
                 f"Uploaded event data ({len(spider.event_data)} documents)"
             )
 
+            if spider.upload_event_data:
+                with open(filename, "w+") as event_data_file:
+                    json.dump(spider.event_data, event_data_file)
+                    spider.upload_file(event_data_file)
+                spider.logger.info(
+                    f"Uploaded event data to the Documentcloud interface."
+                )
+
         if not spider.run_id:
             with open("event_data.json", "w") as file:
                 json.dump(spider.event_data, file)
