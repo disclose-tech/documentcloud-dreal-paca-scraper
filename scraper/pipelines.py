@@ -200,10 +200,8 @@ class UploadPipeline:
 
         if not spider.dry_run:
             try:
-                spider.logger.info("Trying to load event_data...")
+                spider.logger.info("Loading event data from DocumentCloud...")
                 spider.event_data = spider.load_event_data()
-                spider.logger.info("Event_data loaded.")
-
             except Exception as e:
                 raise Exception("Error loading event data").with_traceback(
                     e.__traceback__
@@ -212,6 +210,7 @@ class UploadPipeline:
         else:
             # Load from json if present
             try:
+                spider.logger.info("Loading event data from local JSON file...")
                 with open("event_data.json", "r") as file:
                     data = json.load(file)
 
@@ -219,10 +218,13 @@ class UploadPipeline:
             except:
                 spider.event_data = None
 
-        if not spider.event_data:
+        if spider.event_data:
+            spider.logger.info(
+                f"Loaded event data ({len(spider.event_data)} documents)"
+            )
+        else:
+            spider.logger.info("No event data was loaded.")
             spider.event_data = {}
-
-        spider.logger.info(f"Loaded event data ({len(spider.event_data)} documents)")
 
     def process_item(self, item, spider):
 
