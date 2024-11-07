@@ -11,6 +11,8 @@ from scrapy.exceptions import DropItem
 
 from documentcloud.constants import SUPPORTED_EXTENSIONS
 
+from .log import SilentDropItem
+
 
 class ParseDatePipeline:
     """Parse dates from scraped data."""
@@ -188,7 +190,7 @@ class UploadLimitPipeline:
         else:
             spider.upload_limit_attained = True
             print("Upload limit attained. Closing spider...")
-            raise DropItem("Upload limit exceeded.")
+            raise SilentDropItem("Upload limit exceeded.")
 
 
 class UploadPipeline:
