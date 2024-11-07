@@ -13,7 +13,6 @@ class DocumentItem(Item):
     access = Field()
 
     authority = Field()
-    department = Field()
 
     category = Field()
     category_local = Field()

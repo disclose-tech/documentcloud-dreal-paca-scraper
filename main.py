@@ -76,7 +76,7 @@ class DiscloseDREALPACAScraper(AddOn):
         # Add-on inputs
 
         self.run_name = self.data.get("run_name", "no name")
-        self.access_level = self.data["access_level"]
+        self.access_level = self.data.get("access_level", "private")
         self.check_access_level()
 
         self.target_year = self.data.get(

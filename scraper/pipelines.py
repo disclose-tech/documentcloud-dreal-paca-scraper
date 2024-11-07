@@ -65,7 +65,7 @@ class BeautifyPipeline:
         """Beautify & harmonize project names & document titles."""
 
         # Full info
-        # Beautified to simplify regex to extract municipalities below
+        # Beautified to simplify regex to extract municipalities in project name below
 
         item["full_info"] = (
             item["full_info"].replace(" ", " ").replace("’", "'").replace("  ", " ")
@@ -185,11 +185,10 @@ class UploadLimitPipeline:
     def process_item(self, item, spider):
         self.number_of_docs += 1
 
-        if spider.upload_limit == 0 or self.number_of_docs < spider.upload_limit + 1:
+        if spider.upload_limit == 0 or self.number_of_docs <= spider.upload_limit:
             return item
         else:
             spider.upload_limit_attained = True
-            print("Upload limit attained. Closing spider...")
             raise SilentDropItem("Upload limit exceeded.")
 
 
@@ -242,7 +241,6 @@ class UploadPipeline:
                     access=item["access"],
                     data={
                         "authority": item["authority"],
-                        # "region": item["region"],
                         "category": item["category"],
                         "category_local": item["category_local"],
                         "source_scraper": item["source_scraper"],
