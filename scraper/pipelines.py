@@ -314,7 +314,7 @@ class MailPipeline:
 
             return item_string
 
-        subject = f"DREAL PACA Scraper {str(spider.target_year)} (New: {len(self.scraped_items)} )"
+        subject = f"DREAL PACA Scraper {str(spider.target_year)} (New: {len(self.scraped_items)}) [{spider.run_name}]"
 
         start_content = f"DREAL PACA Scraper Addon Run {spider.run_id}"
 
