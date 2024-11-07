@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timedelta
 
 import scrapy
 from scrapy.exceptions import CloseSpider
@@ -17,6 +18,22 @@ class PACASpider(scrapy.Spider):
     ]
 
     upload_limit_attained = False
+
+    start_time = datetime.now()
+
+    def check_time_limit(self):
+        """Closes the spider automatically if it reaches a duration of 5h45min"""
+        """as GitHub's actions have a 6 hours limit."""
+
+        if self.time_limit != 0:
+
+            limit = self.time_limit * 60
+            now = datetime.now()
+
+            if timedelta.total_seconds(now - self.start_time) > limit:
+                raise CloseSpider(
+                    f"Closed due to time limit ({self.time_limit} minutes)"
+                )
 
     def check_upload_limit(self):
         """Closes the spider if the upload limit is attained."""
@@ -47,6 +64,9 @@ class PACASpider(scrapy.Spider):
     def parse_departments_list(self, response):
         """Parse the departments selection page of a year."""
 
+        self.check_time_limit()
+        self.check_upload_limit()
+
         dept_links = response.css("#contenu a.fr-tile__link")
 
         for link in dept_links:
@@ -63,6 +83,9 @@ class PACASpider(scrapy.Spider):
 
     def parse_projects_list(self, response, dept, page):
         """Parse projects list for a year & department."""
+
+        self.check_time_limit()
+        self.check_upload_limit()
 
         self.logger.info(f"Scraping {dept.split(' - ')[1]}, page {page}")
 
@@ -99,6 +122,9 @@ class PACASpider(scrapy.Spider):
 
     def parse_project_page(self, response, dept):
         """Parse the page of a project."""
+
+        self.check_time_limit()
+        self.check_upload_limit()
 
         file_links = response.css("#contenu div.fr-downloads-group a.fr-download__link")
 
@@ -166,6 +192,7 @@ class PACASpider(scrapy.Spider):
 
     def parse_document_headers(self, response, doc_item):
 
+        self.check_time_limit()
         self.check_upload_limit()
 
         doc_item["source_file_url"] = response.request.url
