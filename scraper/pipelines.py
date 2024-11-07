@@ -121,9 +121,9 @@ class BeautifyPipeline:
 
         # Title
 
-        # item["title"] = item["title"].strip()
-        # item["title"] = item["title"].replace("  ", " ").replace("’", "'")
-        # item["title"] = item["title"].rstrip(".,")
+        item["title"] = item["title"].strip()
+        item["title"] = item["title"].replace("  ", " ").replace("’", "'")
+        item["title"] = item["title"].rstrip(".,")
 
         item["title"] = item["title"].replace("  ", " ")
 
