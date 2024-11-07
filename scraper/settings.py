@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = "scraper.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = "Public Documents Scraper"
+USER_AGENT = "Disclose DocumentCloud Add-On - contact tech@disclose.ngo"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -25,7 +25,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1.1
+DOWNLOAD_DELAY = 4
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -108,8 +108,8 @@ RETRY_TIMES = 4
 
 # Development settings
 AUTOTHROTTLE_DEBUG = False
-HTTPCACHE_ENABLED = False
-HTTPCACHE_IGNORE_HTTP_CODES = [503]
+HTTPCACHE_ENABLED = True
+HTTPCACHE_IGNORE_HTTP_CODES = [502, 503, 504]
 HTTPCACHE_EXPIRATION_SECS = 86400 * 7  # 7 days
 DEPTH_STATS_VERBOSE = False
 LOG_LEVEL = "INFO"
