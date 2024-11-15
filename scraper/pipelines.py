@@ -260,12 +260,18 @@ class UploadPipeline:
         except Exception as e:
             raise Exception("Upload error").with_traceback(e.__traceback__)
         else:  # No upload error, add to event_data
-            now = datetime.datetime.now().isoformat()
+
+            last_modified = datetime.datetime.strptime(
+                item["publication_lastmodified"], "%a, %d %b %Y %H:%M:%S %Z"
+            ).isoformat()
+            now = datetime.datetime.now().isoformat(timespec="seconds")
+
             spider.event_data[item["source_file_url"]] = {
-                "last_modified": item["publication_datetime"],
+                "last_modified": last_modified,
                 "last_seen": now,
                 "target_year": spider.target_year,
             }
+
             # # Save event data after each upload
             if spider.run_id and not spider.dry_run:  # only from the web interface
                 spider.store_event_data(spider.event_data)
