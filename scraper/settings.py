@@ -74,6 +74,7 @@ ITEM_PIPELINES = {
     "scraper.pipelines.SourceFilenamePipeline": 300,
     "scraper.pipelines.BeautifyPipeline": 400,
     "scraper.pipelines.UnsupportedFiletypePipeline": 500,
+    "scraper.pipelines.TagDepartmentsPipeline": 550,
     "scraper.pipelines.UploadLimitPipeline": 600,
     "scraper.pipelines.UploadPipeline": 700,
     "scraper.pipelines.MailPipeline": 800,
@@ -114,7 +115,7 @@ RETRY_TIMES = 4
 AUTOTHROTTLE_DEBUG = False
 HTTPCACHE_ENABLED = False
 HTTPCACHE_IGNORE_HTTP_CODES = [502, 503, 504]
-HTTPCACHE_EXPIRATION_SECS = 86400 * 7  # 7 days
+HTTPCACHE_EXPIRATION_SECS = 86400 * 10  # days
 DEPTH_STATS_VERBOSE = False
 LOG_LEVEL = "INFO"
 FEEDS = {

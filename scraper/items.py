@@ -33,3 +33,7 @@ class DocumentItem(Item):
     year = Field()
 
     headers = Field()
+
+    department_from_scraper = Field()
+    departments = Field()
+    departments_sources = Field()

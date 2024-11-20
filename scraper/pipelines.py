@@ -8,10 +8,11 @@ import logging
 import json
 
 from scrapy.exceptions import DropItem
-
+from itemadapter import ItemAdapter
 from documentcloud.constants import SUPPORTED_EXTENSIONS
 
 from .log import SilentDropItem
+from .departments import department_from_authority, departments_from_project_name
 
 
 class ParseDatePipeline:
@@ -113,7 +114,7 @@ class BeautifyPipeline:
 
             # Add department number if missing
             if not re.search(r"\d\d\)$", municipalities):
-                municipalities += f" ({item['department']})"
+                municipalities += f" ({item['department_from_scraper']})"
 
             item["project"] = item["project"] + " - " + municipalities
 
@@ -192,6 +193,33 @@ class UploadLimitPipeline:
             raise SilentDropItem("Upload limit exceeded.")
 
 
+class TagDepartmentsPipeline:
+
+    def process_item(self, item, spider):
+
+        item["departments"] = [item["department_from_scraper"]]
+        item["departments_sources"] = ["scraper"]
+
+        authority_department = department_from_authority(item["authority"])
+
+        if authority_department and authority_department != department_from_scraper:
+            item["departments_sources"].append("authority")
+            item["departments"].append(authority_department)
+
+        else:
+
+            project_departments = departments_from_project_name(item["project"])
+
+            if project_departments and project_departments != item["departments"]:
+                item["departments_sources"].append("regex")
+                item["departments"].extend(project_departments)
+
+        if item["departments"]:
+            item["departments"] = sorted(list(set(item["departments"])))
+
+        return item
+
+
 class UploadPipeline:
     """Upload document to DocumentCloud & store event data."""
 
@@ -229,6 +257,26 @@ class UploadPipeline:
 
     def process_item(self, item, spider):
 
+        data = {
+            "authority": item["authority"],
+            "category": item["category"],
+            "category_local": item["category_local"],
+            "source_scraper": item["source_scraper"],
+            "source_file_url": item["source_file_url"],
+            "event_data_key": item["source_file_url"],
+            "source_page_url": item["source_page_url"],
+            "source_filename": item["source_filename"],
+            "publication_date": item["publication_date"],
+            "publication_time": item["publication_time"],
+            "publication_datetime": item["publication_datetime"],
+            "year": str(item["year"]),
+        }
+
+        adapter = ItemAdapter(item)
+        if adapter.get("departments") and adapter.get("departments_sources"):
+            data["departments"] = item["departments"]
+            data["departments_sources"] = item["departments_sources"]
+
         try:
             if not spider.dry_run:
                 spider.client.documents.upload(
@@ -239,20 +287,7 @@ class UploadPipeline:
                     source=item["source"],
                     language="fra",
                     access=item["access"],
-                    data={
-                        "authority": item["authority"],
-                        "category": item["category"],
-                        "category_local": item["category_local"],
-                        "source_scraper": item["source_scraper"],
-                        "source_file_url": item["source_file_url"],
-                        "event_data_key": item["source_file_url"],
-                        "source_page_url": item["source_page_url"],
-                        "source_filename": item["source_filename"],
-                        "publication_date": item["publication_date"],
-                        "publication_time": item["publication_time"],
-                        "publication_datetime": item["publication_datetime"],
-                        "year": str(item["year"]),
-                    },
+                    data=data,
                 )
                 spider.logger.info(
                     f"Uploaded {item['source_file_url']} to DocumentCloud"
