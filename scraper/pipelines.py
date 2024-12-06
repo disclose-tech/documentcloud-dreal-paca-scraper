@@ -6,6 +6,7 @@ import os
 from urllib.parse import urlparse
 import logging
 import json
+import hashlib
 
 from scrapy.exceptions import DropItem
 from itemadapter import ItemAdapter
