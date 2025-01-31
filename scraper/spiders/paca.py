@@ -174,7 +174,6 @@ class PACASpider(scrapy.Spider):
                         year=self.target_year,
                         authority="Préfecture de région Provence-Alpes-Côte d'Azur",
                         category_local="Décisions suite à examen au cas par cas des projets",
-                        source_scraper=f"DREAL PACA Scraper {self.target_year}",
                         full_info=info,
                         source="www.paca.developpement-durable.gouv.fr",
                         access=self.access_level,
