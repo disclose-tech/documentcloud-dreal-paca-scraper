@@ -45,7 +45,7 @@ class PACASpider(scrapy.Spider):
 
         years_links = response.css("#contenu div.fr-collapse div>a")
 
-        for link in years_links:
+        for link in years_links[1:]:
 
             # Get link text and url
             link_text = link.css("::text").get()
