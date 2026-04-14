@@ -264,6 +264,8 @@ class UploadPipeline(SpiderPipeline):
         spider = self.spider
         documentcloud_logger = logging.getLogger("documentcloud")
         documentcloud_logger.setLevel(logging.WARNING)
+        squarelet_logger = logging.getLogger("squarelet")
+        squarelet_logger.setLevel(logging.WARNING)
 
         if not spider.dry_run:
             try:
